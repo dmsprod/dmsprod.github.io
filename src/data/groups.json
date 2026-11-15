@@ -1,0 +1,23 @@
+[
+  {
+    "id": "stoneheart",
+    "name": "Stoneheart",
+    "style": "Metal",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "logo": "/uploads/groupe-stoneheart.jpg",
+    "website": "https://example.com/stoneheart",
+    "facebook": "https://example.com/stoneheart-facebook",
+    "instagram": "https://example.com/stoneheart-instagram",
+    "contact": "mailto:contact@stoneheart.example"
+  },
+  {
+    "id": "distorted-memory",
+    "name": "Distorted Memory",
+    "style": "Rock",
+    "summary": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "logo": "/uploads/groupe-distorted-memory.jpg",
+    "facebook": "https://example.com/distorted-memory-facebook",
+    "instagram": "https://example.com/distorted-memory-instagram",
+    "contact": "mailto:contact@distorted-memory.example"
+  }
+]

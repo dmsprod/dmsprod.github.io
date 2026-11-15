@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import site from '../data/site.json';
+---
+
+<Base title="Adhésion" description="Adhérer à l'association DMS Prod et soutenir Stoneheart et Distorted Memory.">
+  <PageHead eyebrow="Adhésion" title="Rejoindre l'asso" lead="Adhérer, c'est soutenir Stoneheart et Distorted Memory et participer aux décisions de l'association." />
+
+  <section class="section">
+    <div class="container" style="display:grid; gap:1.25rem; justify-items:start">
+      <a class="btn" href={site.helloasso.url} aria-disabled={site.helloasso.enabled ? undefined : 'true'} rel="noopener">
+        Adhérer sur HelloAsso <span class="arrow" aria-hidden="true">→</span>
+      </a>
+      {!site.helloasso.enabled && (
+        <div class="notice"><span>Les adhésions ouvriront après la création officielle de l'association.</span></div>
+      )}
+    </div>
+  </section>
+</Base>

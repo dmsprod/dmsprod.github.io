@@ -1,0 +1,39 @@
+---
+import site from '../data/site.json';
+import { mainNav, legalNav } from '../lib/navigation';
+import Brand from './Brand.astro';
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <Brand size={84} showName={false} />
+        <p>{site.fullName}. Association loi 1901, {site.city}, {site.department}.</p>
+      </div>
+      <div class="footer-col">
+        <h2>Navigation</h2>
+        <ul>{mainNav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul>
+      </div>
+      <div class="footer-col">
+        <h2>Contact</h2>
+        <ul>
+          <li><a href={`mailto:${site.emails.contact}`}>{site.emails.contact}</a></li>
+          <li><a href={`mailto:${site.emails.booking}`}>{site.emails.booking}</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Suivre</h2>
+        <ul>
+          <li><a href={site.socials.instagram} rel="noopener">Instagram</a></li>
+          <li><a href={site.socials.facebook} rel="noopener">Facebook</a></li>
+          <li><a href="/rss.xml">Flux RSS</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {new Date().getFullYear()} {site.name}</span>
+      <span>{legalNav.map((item, i) => <>{i > 0 && ' · '}<a href={item.href}>{item.label}</a></>)}</span>
+    </div>
+  </div>
+</footer>

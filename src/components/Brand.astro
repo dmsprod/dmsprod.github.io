@@ -1,0 +1,12 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo.png';
+
+interface Props { href?: string; size?: number; showName?: boolean }
+const { href = '/', size = 46, showName = true } = Astro.props;
+---
+
+<a class="brand" href={href} aria-label="DMS Prod, accueil">
+  <Image class="brand__logo" src={logo} alt="" height={size * 2} style={`height:${size}px`} loading="eager" />
+  {showName && <span class="brand__name">DMS <span>Prod</span></span>}
+</a>

@@ -1,0 +1,15 @@
+---
+import { tagUrl, tagLabel } from '../lib/news';
+
+interface Props { tags: { tag: string; count: number }[]; total: number; current?: string }
+const { tags, total, current } = Astro.props;
+---
+
+<nav aria-label="Filtrer par tag">
+  <ul class="tags">
+    <li><a class="tag" href="/actualites/" aria-current={current ? undefined : 'page'}>Tout <span class="count">{total}</span></a></li>
+    {tags.map(({ tag, count }) => (
+      <li><a class="tag" href={tagUrl(tag)} aria-current={tag === current ? 'page' : undefined}>{tagLabel(tag)} <span class="count">{count}</span></a></li>
+    ))}
+  </ul>
+</nav>

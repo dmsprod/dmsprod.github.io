@@ -1,0 +1,32 @@
+{
+  "name": "DMS Prod",
+  "fullName": "Distorted Memory Stoneheart Production",
+  "tagline": "Les concerts de Stoneheart et Distorted Memory, organisés de A à Z.",
+  "description": "Association loi 1901 basée dans la Loire (42). DMS Prod organise les concerts de Stoneheart et Distorted Memory dans les bars, restaurants et salles : contrat, facturation, logistique.",
+  "city": "Saint-Médard-en-Forez",
+  "department": "Loire (42)",
+  "emails": {
+    "contact": "contact@dmsprod.fr",
+    "booking": "booking@dmsprod.fr"
+  },
+  "socials": {
+    "instagram": "https://example.com/dmsprod-instagram",
+    "facebook": "https://example.com/dmsprod-facebook"
+  },
+  "helloasso": {
+    "enabled": false,
+    "url": "https://www.helloasso.com/"
+  },
+  "legal": {
+    "address": "[Adresse du siège, à compléter]",
+    "rna": "[N° RNA, à compléter après déclaration]",
+    "siret": "[SIRET, à compléter]",
+    "publicationDirector": "[Nom du président ou de la présidente]",
+    "host": {
+      "name": "GitHub, Inc.",
+      "address": "88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis",
+      "website": "https://github.com"
+    }
+  },
+  "mockup": true
+}

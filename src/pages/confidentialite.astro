@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import site from '../data/site.json';
+---
+
+<Base title="Confidentialité" description="Données personnelles et cookies sur le site de DMS Prod.">
+  <PageHead title="Confidentialité" lead="Version courte : on collecte le strict minimum, et rien n'est revendu." />
+
+  <section class="section">
+    <div class="container container--narrow prose">
+      <div class="notice"><span>Maquette : texte à finaliser selon les outils retenus (formulaire, statistiques, HelloAsso).</span></div>
+
+      <h2>Cookies</h2>
+      <p>Ce site ne dépose aucun cookie publicitaire ni de traçage. Seul votre choix de thème (clair ou sombre) est enregistré dans votre navigateur, et il n'est jamais transmis.</p>
+
+      <h2>Polices et ressources</h2>
+      <p>Les polices de caractères sont hébergées avec le site : aucune requête n'est envoyée à un service tiers (Google Fonts ou autre) lors de votre visite.</p>
+
+      <h2>Mesure d'audience</h2>
+      <p>[À préciser : par exemple un outil sans cookie et sans donnée personnelle, comme GoatCounter.]</p>
+
+      <h2>Vos messages</h2>
+      <p>Les mails envoyés à l'association servent uniquement à vous répondre. Ils sont conservés le temps nécessaire au traitement de votre demande.</p>
+
+      <h2>Adhésions</h2>
+      <p>Les adhésions et paiements passent par HelloAsso, qui traite vos données selon sa propre politique de confidentialité.</p>
+
+      <h2>Vos droits</h2>
+      <p>Vous pouvez demander l'accès, la rectification ou la suppression de vos données en écrivant à <a href={`mailto:${site.emails.contact}`}>{site.emails.contact}</a>. Vous pouvez aussi saisir la CNIL (cnil.fr).</p>
+    </div>
+  </section>
+</Base>

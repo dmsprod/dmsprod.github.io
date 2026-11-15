@@ -1,0 +1,110 @@
+---
+import '@fontsource-variable/cinzel';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import site from '../data/site.json';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  /** Titre de la page, sans le nom du site (absent sur l'accueil). */
+  title?: string;
+  description?: string;
+  /** Image de partage (Open Graph), chemin dans public/. */
+  image?: string;
+  type?: 'website' | 'article';
+}
+
+const { title, description = site.description, image = '/og-image.jpg', type = 'website' } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {site.mockup && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title={`Actualités ${site.name}`} href="/rss.xml" />
+    <meta name="theme-color" content="#0a0908" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- Thème appliqué avant le premier rendu (pas de flash) : choix enregistré, sinon sombre (charte noir et or). -->
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add('js');
+        let theme = null;
+        try { theme = localStorage.getItem('theme'); } catch {}
+        if (theme !== 'light' && theme !== 'dark') theme = 'dark';
+        root.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    {site.mockup && <div class="mockup-bar">Maquette V0.1 · contenus fictifs</div>}
+    <Header />
+    <main id="contenu">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Bascule clair/sombre, mémorisée (sombre par défaut).
+      const root = document.documentElement;
+      const apply = (theme: string) => {
+        root.dataset.theme = theme;
+        document.querySelectorAll<HTMLButtonElement>('.theme-toggle').forEach((btn) =>
+          btn.setAttribute('aria-label', theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'));
+      };
+      apply(root.dataset.theme ?? 'dark');
+      document.querySelectorAll('.theme-toggle').forEach((btn) =>
+        btn.addEventListener('click', () => {
+          const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          try { localStorage.setItem('theme', next); } catch {}
+          apply(next);
+        }));
+
+      // Menu mobile.
+      const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+      const panel = document.getElementById('menu-mobile');
+      const setOpen = (open: boolean) => {
+        toggle?.setAttribute('aria-expanded', String(open));
+        toggle?.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+        panel?.classList.toggle('is-open', open);
+        panel?.toggleAttribute('inert', !open);
+        document.body.classList.toggle('menu-open', open);
+      };
+      toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+      matchMedia('(min-width: 900px)').addEventListener('change', (e) => { if (e.matches) setOpen(false); });
+
+      // Apparition des blocs au défilement.
+      const reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+          }
+        }, { rootMargin: '0px 0px -8% 0px' });
+        reveals.forEach((el) => observer.observe(el));
+      } else {
+        reveals.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

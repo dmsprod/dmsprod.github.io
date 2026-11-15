@@ -1,0 +1,58 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render, getEntries } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getPublishedNews, newsSlug, newsUrl, formatDate, tagUrl, tagLabel, type NewsEntry } from '../../lib/news';
+
+export const getStaticPaths = (async () => {
+  const entries = await getPublishedNews();
+  return entries.map((entry, i) => ({
+    params: { slug: newsSlug(entry) },
+    // Liste triée du plus récent au plus ancien : "suivant" = plus récent.
+    props: { entry, newer: entries[i - 1], older: entries[i + 1] },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props { entry: NewsEntry; newer?: NewsEntry; older?: NewsEntry }
+const { entry, newer, older } = Astro.props;
+const { title, date, summary, cover, coverAlt, tags, groups } = entry.data;
+const { Content } = await render(entry);
+const groupEntries = await getEntries(groups);
+---
+
+<Base title={title} description={summary} image={cover} type="article">
+  <article>
+    <header class="article-head">
+      <div class="container container--narrow">
+        <nav aria-label="Fil d'Ariane">
+          <ol class="breadcrumb">
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/actualites/">Actualités</a></li>
+          </ol>
+        </nav>
+        <h1 class="gold-text">{title}</h1>
+        <p class="lead">{summary}</p>
+        <div class="card__meta">
+          <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>
+          {groupEntries.map((g) => <span class="badge">{g.data.name}</span>)}
+        </div>
+      </div>
+    </header>
+
+    <div class="container container--narrow">
+      {cover && <figure class="article-cover"><img src={cover} alt={coverAlt ?? ''} width="1200" height="675" /></figure>}
+      <div class="prose" style={cover ? undefined : 'margin-top:2rem'}>
+        <Content />
+      </div>
+
+      <footer class="article-foot">
+        {tags.length > 0 && <ul class="tags">{tags.map((tag) => <li><a class="tag" href={tagUrl(tag)}>{tagLabel(tag)}</a></li>)}</ul>}
+        <nav class="pager" aria-label="Autres actualités">
+          {older && <a class="prev" href={newsUrl(older)}><small>← Plus ancienne</small><strong>{older.data.title}</strong></a>}
+          {newer && <a class="next" href={newsUrl(newer)}><small>Plus récente →</small><strong>{newer.data.title}</strong></a>}
+        </nav>
+      </footer>
+    </div>
+  </article>
+  <div class="section" style="padding-top:3rem"></div>
+</Base>

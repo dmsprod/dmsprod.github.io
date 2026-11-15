@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  eyebrow?: string;
+  lead?: string;
+  crumbs?: { href: string; label: string }[];
+}
+const { title, eyebrow, lead, crumbs = [] } = Astro.props;
+---
+
+<header class="page-head">
+  <div class="container">
+    {crumbs.length > 0 && (
+      <nav aria-label="Fil d'Ariane">
+        <ol class="breadcrumb">
+          <li><a href="/">Accueil</a></li>
+          {crumbs.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+        </ol>
+      </nav>
+    )}
+    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+    <h1 class="gold-text">{title}</h1>
+    {lead && <p>{lead}</p>}
+    <slot />
+  </div>
+</header>

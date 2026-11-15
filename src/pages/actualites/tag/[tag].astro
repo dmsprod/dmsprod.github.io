@@ -1,0 +1,35 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import NewsCard from '../../../components/NewsCard.astro';
+import TagFilter from '../../../components/TagFilter.astro';
+import { getPublishedNews, countTags, tagSlug, tagLabel, type NewsEntry } from '../../../lib/news';
+
+export const getStaticPaths = (async () => {
+  const entries = await getPublishedNews();
+  const tags = countTags(entries);
+  return tags.map(({ tag }) => ({
+    params: { tag: tagSlug(tag) },
+    props: { tag, tags, total: entries.length, entries: entries.filter((e) => e.data.tags.includes(tag)) },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props { tag: string; tags: { tag: string; count: number }[]; total: number; entries: NewsEntry[] }
+const { tag, tags, total, entries } = Astro.props;
+const label = tagLabel(tag);
+---
+
+<Base title={`${label} · Actualités`} description={`Les actualités DMS Prod sur le thème ${label.toLowerCase()}.`}>
+  <PageHead eyebrow={`${entries.length} article${entries.length > 1 ? 's' : ''}`} title={`#${label}`} crumbs={[{ href: '/actualites/', label: 'Actualités' }]}>
+    <div style="margin-top:1.75rem"><TagFilter tags={tags} total={total} current={tag} /></div>
+  </PageHead>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--3">
+        {entries.map((entry, i) => <NewsCard entry={entry} delay={(i % 3) * 90} />)}
+      </div>
+    </div>
+  </section>
+</Base>

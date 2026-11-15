@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import site from '../data/site.json';
+
+const { legal } = site;
+---
+
+<Base title="Mentions légales" description="Mentions légales du site de l'association DMS Prod.">
+  <PageHead title="Mentions légales" />
+
+  <section class="section">
+    <div class="container container--narrow prose">
+      <div class="notice"><span>Maquette : les champs entre crochets seront remplis après la déclaration de l'association.</span></div>
+
+      <h2>Éditeur du site</h2>
+      <p>
+        <strong>{site.name}</strong> ({site.fullName}), association régie par la loi du 1<sup>er</sup> juillet 1901.<br />
+        Siège : {legal.address}<br />
+        N° RNA : {legal.rna}<br />
+        SIRET : {legal.siret}<br />
+        Contact : <a href={`mailto:${site.emails.contact}`}>{site.emails.contact}</a>
+      </p>
+
+      <h2>Directeur de la publication</h2>
+      <p>{legal.publicationDirector}, en qualité de président(e) de l'association.</p>
+
+      <h2>Hébergement</h2>
+      <p>
+        {legal.host.name}<br />
+        {legal.host.address}<br />
+        <a href={legal.host.website} rel="noopener">{legal.host.website}</a>
+      </p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>Les textes, logos et photos de ce site appartiennent à l'association ou aux groupes concernés. Toute reproduction demande leur accord préalable. Les photos de personnes sont publiées avec leur autorisation (et celle des parents pour les mineurs).</p>
+
+      <h2>Données personnelles</h2>
+      <p>Voir la page <a href="/confidentialite/">Confidentialité</a>.</p>
+    </div>
+  </section>
+</Base>

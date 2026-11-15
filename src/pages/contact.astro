@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import site from '../data/site.json';
+---
+
+<Base title="Contact" description="Contacter DMS Prod pour faire jouer Stoneheart et Distorted Memory dans votre bar, restaurant ou salle.">
+  <PageHead eyebrow="Contact" title="On se parle ?" lead="Un concert à organiser, une question : écrivez-nous, on répond vite." />
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--2">
+        <div class="card contact-card reveal">
+          <span class="eyebrow">Lieux & organisateurs</span>
+          <h2>Booking</h2>
+          <p>Bar, restaurant, salle ou festival ? Proposez-nous une date : on revient vers vous avec un devis et un contrat.</p>
+          <a class="mail" href={`mailto:${site.emails.booking}`}>{site.emails.booking}</a>
+        </div>
+        <div class="card contact-card reveal" style="--delay:90ms">
+          <span class="eyebrow">Tout le reste</span>
+          <h2>Association</h2>
+          <p>Toute autre question sur DMS Prod.</p>
+          <a class="mail" href={`mailto:${site.emails.contact}`}>{site.emails.contact}</a>
+        </div>
+      </div>
+
+      <div class="reveal" style="margin-top:3.5rem; max-width:640px">
+        <span class="eyebrow">Comment ça se passe</span>
+        <h2 style="margin-bottom:1.5rem">Un concert en 4 étapes</h2>
+        <ol class="steps">
+          <li><div><strong>Premier contact</strong><span>Vous nous écrivez avec la date, le lieu et le type de soirée.</span></div></li>
+          <li><div><strong>Proposition</strong><span>On vous propose Stoneheart, Distorted Memory…</span></div></li>
+          <li><div><strong>Contrat</strong><span>L'association signe le contrat et vous envoie la facture.</span></div></li>
+          <li><div><strong>Le concert</strong><span>Ça joue, vous réglez l'association par virement. C'est tout.</span></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</Base>

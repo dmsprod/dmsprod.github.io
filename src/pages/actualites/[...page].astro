@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import TagFilter from '../../components/TagFilter.astro';
+import { getPublishedNews, countTags, type NewsEntry } from '../../lib/news';
+
+/** /actualites/ puis /actualites/2/, /actualites/3/… (6 articles par page) */
+export const getStaticPaths = (async ({ paginate }) => {
+  const entries = await getPublishedNews();
+  return paginate(entries, { pageSize: 6, props: { tags: countTags(entries), total: entries.length } });
+}) satisfies GetStaticPaths;
+
+interface Props { page: Page<NewsEntry>; tags: { tag: string; count: number }[]; total: number }
+const { page, tags, total } = Astro.props;
+---
+
+<Base title={page.currentPage > 1 ? `Actualités, page ${page.currentPage}` : 'Actualités'} description="Concerts, enregistrements et vie de l'association DMS Prod.">
+  <PageHead eyebrow="Le journal" title="Actualités" lead="Concerts, enregistrements, vie de l'association.">
+    {tags.length > 0 && <div style="margin-top:1.75rem"><TagFilter tags={tags} total={total} /></div>}
+  </PageHead>
+
+  <section class="section">
+    <div class="container">
+      {page.data.length === 0
+        ? <p style="color:var(--text-muted); font-size:1.1rem">Pas encore d'actualité : les premières dates arrivent bientôt.</p>
+        : <div class="grid grid--3">{page.data.map((entry, i) => <NewsCard entry={entry} delay={(i % 3) * 90} />)}</div>}
+
+      {page.lastPage > 1 && (
+        <nav class="pagination" aria-label="Pagination">
+          {page.url.prev ? <a class="btn btn--ghost" href={page.url.prev}>← Plus récentes</a> : <span />}
+          <span>Page {page.currentPage} / {page.lastPage}</span>
+          {page.url.next ? <a class="btn btn--ghost" href={page.url.next}>Plus anciennes →</a> : <span />}
+        </nav>
+      )}
+    </div>
+  </section>
+</Base>

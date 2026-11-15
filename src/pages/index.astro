@@ -1,0 +1,138 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import banner from '../assets/brand/banniere-scene.jpg';
+import NewsCard from '../components/NewsCard.astro';
+import site from '../data/site.json';
+import { getPublishedNews } from '../lib/news';
+
+const latest = (await getPublishedNews()).slice(0, 3);
+const groups = await getCollection('groups');
+
+const features = [
+  { title: 'Pour les lieux', text: 'Un seul interlocuteur pour le contrat, la facture et la logistique.' },
+  { title: 'Pour les deux groupes', text: 'Chaque concert alimente le budget du groupe : matériel, enregistrements, merch.' },
+  { title: 'Pour le public', text: 'Des concerts près de chez vous, dans les bars, les restaurants et les salles.' },
+];
+const marquee = ['Stoneheart', 'Distorted Memory', 'Concerts', 'Bars', 'Restaurants', 'Salles'];
+const linkLabels: Record<string, string> = { website: 'Site officiel', instagram: 'Instagram', facebook: 'Facebook', youtube: 'YouTube', bandcamp: 'Bandcamp' };
+---
+
+<Base>
+  <div class="banner">
+    <Picture
+      src={banner}
+      alt="Le logo DMS Prod en fond de scène, batterie, guitares et projecteurs"
+      formats={['avif', 'webp']}
+      widths={[640, 960, 1400, 2000]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero__title gold-text intro"><span class="visually-hidden">DMS Prod : </span>Votre interlocuteur unique pour faire jouer sur scène vos groupes préférés</h1>
+      <div class="ornament intro" style="--delay:60ms" aria-hidden="true">◆</div>
+      <p class="hero__lead intro" style="--delay:100ms">Bars, restaurants, salles : on fait jouer Stoneheart et Distorted Memory chez vous. On signe, on facture, on organise ; eux s'occupent du son.</p>
+      <div class="btn-row intro" style="--delay:160ms">
+        <a class="btn" href="/contact/">Organiser un concert <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {[...marquee, ...marquee].map((word) => <span>{word}</span>)}
+    </div>
+  </div>
+
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Les groupes</span>
+          <h2>Sur scène</h2>
+        </div>
+      </div>
+      <div class="grid grid--2">
+        {groups.map((g, i) => (
+          <article class="card group-card reveal" style={`--delay:${i * 90}ms`}>
+            <div class="group-card__logo">
+              <img src={g.data.logo} alt={`Logo de ${g.data.name}`} width="1200" height="600" loading="lazy" />
+            </div>
+            <div class="card__body">
+              <span class="style">{g.data.style}</span>
+              <h3>{g.data.name}</h3>
+              <p>{g.data.summary}</p>
+              <ul class="link-list">
+                {(Object.keys(linkLabels) as (keyof typeof linkLabels)[]).map((key) => {
+                  const url = (g.data as Record<string, unknown>)[key];
+                  return typeof url === 'string' && <li><a href={url} rel="noopener">{linkLabels[key]}</a></li>;
+                })}
+              </ul>
+            </div>
+            {g.data.contact && (
+              <footer class="group-card__foot">
+                <a href={g.data.contact} rel="noopener">Je préfère contacter {g.data.name} directement</a>
+              </footer>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Ce qu'on fait</span>
+          <h2>Un intermédiaire,<br />trois publics</h2>
+        </div>
+      </div>
+      <div class="grid grid--3">
+        {features.map((f, i) => (
+          <div class="feature reveal" style={`--delay:${i * 90}ms`}>
+            <div class="feature__num">0{i + 1}</div>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {latest.length > 0 && (
+    <section class="section section--alt">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Actualités</span>
+            <h2>Dernières nouvelles</h2>
+          </div>
+          <a class="btn btn--ghost" href="/actualites/">Toutes les actualités <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <div class="grid grid--3">
+          {latest.map((entry, i) => <NewsCard entry={entry} delay={i * 90} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--ink">
+    <div class="container cta">
+      <div class="reveal">
+        <span class="eyebrow" style="color:var(--gold)">Vous êtes un lieu ?</span>
+        <h2>Une date à remplir ?<br /><em>Parlons-en.</em></h2>
+        <p style="margin-top:1rem">Stoneheart, Distorted Memory ou les deux. On signe, on facture, on organise.</p>
+      </div>
+      <div class="btn-row reveal" style="--delay:120ms">
+        <a class="btn" href={`mailto:${site.emails.booking}`}>Écrire au booking <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost" href="/contact/">Autres contacts</a>
+      </div>
+    </div>
+  </section>
+</Base>
